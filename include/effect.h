@@ -10,7 +10,7 @@ class Effect
 {
 	std::string name_;
 	std::string guid_;
-	inline static const std::regex effect_pattern{
+	inline static const std::regex pattern{
 		R"(^(.*?)\s*\{(.*?)\}$)"
 	};
 

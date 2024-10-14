@@ -1,7 +1,6 @@
-﻿# CMakeList.txt : CMake project for swtor-combatlog-parser, include source and define
-# project specific logic here.
+﻿# CMakeList.txt : CMake project for swtor-combatlog-parser, now creating a library.
 #
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.29)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -12,15 +11,12 @@ endif()
 # Define the project and specify C++ as the language
 project("sclp" LANGUAGES CXX)
 
-# Set a variable for the target name
-set(TARGET_NAME sclp)
-
 # Include directories
 include_directories("include")
 
-# Add source to this project's executable using the variable
-add_executable(${TARGET_NAME}
-  "src/parser.cpp"
+# Add source files to the library (static or shared)
+add_executable(${PROJECT_NAME}
+  "src/logparser.cpp"
   "src/vector.cpp"
   "src/identifier.cpp"
   "src/entity.cpp"
@@ -30,14 +26,27 @@ add_executable(${TARGET_NAME}
   "src/quant.cpp"
   "src/logentry.cpp"
   "src/parsing_utils.cpp"
-)
+ "src/main.cpp")
 
-# Set target properties for C++ standard and linker language using the variable
-set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 23)
-set_target_properties(${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+# Set target properties for C++ standard
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 23)
 
 # Link the nlohmann_json library using the target name variable
 find_package(nlohmann_json CONFIG REQUIRED)
-target_link_libraries(${TARGET_NAME} PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(${PROJECT_NAME} PRIVATE nlohmann_json::nlohmann_json)
 
-# TODO: Add tests and install targets if needed.
+# Specify output directories for the library
+set_target_properties(${PROJECT_NAME} PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
+# Optional: Add install rules if you want to install the library and headers
+install(TARGETS ${PROJECT_NAME}
+	ARCHIVE DESTINATION lib
+	LIBRARY DESTINATION lib
+	RUNTIME DESTINATION bin
+)
+
+install(DIRECTORY include/ DESTINATION include)

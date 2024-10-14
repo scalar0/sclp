@@ -1,4 +1,3 @@
-// identifier.cpp
 #include "identifier.h"
 #include <string>
 

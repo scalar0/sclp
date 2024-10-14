@@ -11,7 +11,7 @@ bool Effect::parse(const std::string& s)
 		return true;
 	}
 
-	if (std::smatch matches; std::regex_match(s, matches, effect_pattern))
+	if (std::smatch matches; std::regex_match(s, matches, pattern))
 	{
 		// Set name and id from the regex match, trimming the name
 		setName(parsing_utils::trim_copy(matches[1].str()));
