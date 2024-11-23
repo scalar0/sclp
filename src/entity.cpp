@@ -17,8 +17,8 @@ bool Entity::parse(const std::string& s)
 		// Split into owner and identifier
 		const std::string owner_str = (slash_pos != std::string::npos) ? full_identifier_str.substr(0, slash_pos) : "";
 		const std::string identifier_str = (slash_pos != std::string::npos)
-			                                   ? full_identifier_str.substr(slash_pos + 1)
-			                                   : full_identifier_str;
+												? full_identifier_str.substr(slash_pos + 1)
+												: full_identifier_str;
 
 		// Parse owner, if present
 		if (!owner_str.empty())

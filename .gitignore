@@ -11,6 +11,8 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 /.vs
-/out/build/x64-debug
-/out/build/x64-release
 /profiler
+/build
+/doc
+/Folder.DotSettings.user
+/.cdash

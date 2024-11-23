@@ -8,6 +8,29 @@
 
 class Quant
 {
+	friend bool operator==(const Quant& lhs, const Quant& rhs)
+	{
+		return lhs.value_ == rhs.value_
+			&& lhs.is_crit_ == rhs.is_crit_
+			&& lhs.effective_value_ == rhs.effective_value_
+			&& lhs.damage_type_ == rhs.damage_type_
+			&& lhs.damage_type_guid_ == rhs.damage_type_guid_
+			&& lhs.reflect_type_ == rhs.reflect_type_
+			&& lhs.reflect_type_guid_ == rhs.reflect_type_guid_
+			&& lhs.is_mitigation_ == rhs.is_mitigation_
+			&& lhs.mitigation_type_ == rhs.mitigation_type_
+			&& lhs.mitigation_type_guid_ == rhs.mitigation_type_guid_
+			&& lhs.absorb_value_ == rhs.absorb_value_
+			&& lhs.absorb_type_ == rhs.absorb_type_
+			&& lhs.absorb_type_guid_ == rhs.absorb_type_guid_
+			&& lhs.simple_value_ == rhs.simple_value_;
+	}
+
+	friend bool operator!=(const Quant& lhs, const Quant& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	int value_;
 	bool is_crit_;
 	int effective_value_;
@@ -27,9 +50,38 @@ class Quant
 	};
 
 public:
+	Quant(const int value, const bool is_crit, const int effective_value, const std::string& damage_type,
+		const std::string& damage_type_guid, const std::string& reflect_type, const std::string& reflect_type_guid,
+		const bool is_mitigation, const std::string& mitigation_type, const std::string& mitigation_type_guid,
+		const int absorb_value, const std::string& absorb_type, const std::string& absorb_type_guid,
+		const std::string& simple_value)
+		: value_(value),
+		is_crit_(is_crit),
+		effective_value_(effective_value),
+		damage_type_(damage_type),
+		damage_type_guid_(damage_type_guid),
+		reflect_type_(reflect_type),
+		reflect_type_guid_(reflect_type_guid),
+		is_mitigation_(is_mitigation),
+		mitigation_type_(mitigation_type),
+		mitigation_type_guid_(mitigation_type_guid),
+		absorb_value_(absorb_value),
+		absorb_type_(absorb_type),
+		absorb_type_guid_(absorb_type_guid),
+		simple_value_(simple_value)
+	{
+	}
+
 	Quant() : value_(0), is_crit_(false), effective_value_(0), is_mitigation_(false), absorb_value_(0)
 	{
 	}
+
+	explicit Quant(const std::string& simple_value)
+		: value_(0), is_crit_(false), effective_value_(0), is_mitigation_(false), absorb_value_(0),
+		simple_value_(simple_value)
+	{
+	}
+
 
 	// Getters and setters
 	[[nodiscard]] int getValue() const { return value_; }

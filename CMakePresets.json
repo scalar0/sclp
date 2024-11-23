@@ -1,24 +1,35 @@
 ﻿{
-    "version": 3,
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 31,
+        "patch": 1
+    },
     "configurePresets": [
-      {
-        "name": "windows-base",
-        "hidden": true,
-        "generator": "Ninja",
-        "binaryDir": "${sourceDir}/out/build/${presetName}",
-        "installDir": "${sourceDir}/out/install/${presetName}",
-        "cacheVariables": {
-          "CMAKE_C_COMPILER": "cl.exe",
-          "CMAKE_CXX_COMPILER": "cl.exe",
-          "CMAKE_TOOLCHAIN_FILE": "C:/Program Files/Microsoft Visual Studio/2022/Enterprise/VC/vcpkg/scripts/buildsystems/vcpkg.cmake"
+        {
+            "name": "base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "installDir": "${sourceDir}/install/${presetName}"
         },
-        "condition": {
-          "type": "equals",
-          "lhs": "${hostSystemName}",
-          "rhs": "Windows"
-        }
-
-      },
+        {
+            "name": "windows-base",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+            },
+          "environment": {
+            "VSINSTALLDIR": "C:/Program Files/Microsoft Visual Studio/2022/Enterprise",
+            "VCPKG_ROOT": "$env{VSINSTALLDIR}/VC/vcpkg"
+          },
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            }
+        },
         {
             "name": "x64-debug",
             "displayName": "x64 Debug",
@@ -62,9 +73,7 @@
         {
             "name": "linux-debug",
             "displayName": "Linux Debug",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             },
@@ -72,19 +81,12 @@
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Linux"
-            },
-            "vendor": {
-                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
-                }
             }
         },
         {
             "name": "macos-debug",
             "displayName": "macOS Debug",
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
-            "installDir": "${sourceDir}/out/install/${presetName}",
+            "inherits": "base",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             },
@@ -92,12 +94,102 @@
                 "type": "equals",
                 "lhs": "${hostSystemName}",
                 "rhs": "Darwin"
-            },
-            "vendor": {
-                "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": {
-                    "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}"
-                }
             }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "build",
+            "hidden": true,
+            "jobs": 8
+        },
+        {
+            "name": "x64-debug",
+            "inherits": "build",
+            "configurePreset": "x64-debug"
+        },
+        {
+            "name": "x64-release",
+            "inherits": "build",
+            "configurePreset": "x64-release"
+        },
+        {
+            "name": "x86-debug",
+            "inherits": "build",
+            "configurePreset": "x86-debug"
+        },
+        {
+            "name": "x86-release",
+            "inherits": "build",
+            "configurePreset": "x86-release"
+        },
+        {
+            "name": "linux-debug",
+            "inherits": "build",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "macos-debug",
+            "inherits": "build",
+            "configurePreset": "macos-debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test",
+            "hidden": true,
+            "execution": {
+                "jobs": 8
+            }
+        },
+        {
+            "name": "x64-debug",
+            "inherits": "test",
+            "configurePreset": "x64-debug"
+        },
+        {
+            "name": "x64-release",
+            "inherits": "test",
+            "configurePreset": "x64-release"
+        },
+        {
+            "name": "x86-debug",
+            "inherits": "test",
+            "configurePreset": "x86-debug"
+        },
+        {
+            "name": "x86-release",
+            "inherits": "test",
+            "configurePreset": "x86-release"
+        },
+        {
+            "name": "linux-debug",
+            "inherits": "test",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "macos-debug",
+            "inherits": "test",
+            "configurePreset": "macos-debug"
+        }
+    ],
+    "workflowPresets": [
+        {
+            "name": "x64-debug",
+            "steps": [
+                {
+                    "type": "configure",
+                    "name": "x64-debug"
+                },
+                {
+                    "type": "build",
+                    "name": "x64-debug"
+                },
+                {
+                    "type": "test",
+                    "name": "x64-debug"
+                }
+            ]
         }
     ]
 }

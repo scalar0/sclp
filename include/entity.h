@@ -10,6 +10,19 @@
 
 class Entity
 {
+	friend bool operator==(const Entity& lhs, const Entity& rhs)
+	{
+		return lhs.identifier == rhs.identifier
+			&& lhs.owner == rhs.owner
+			&& lhs.vector == rhs.vector
+			&& lhs.health == rhs.health;
+	}
+
+	friend bool operator!=(const Entity& lhs, const Entity& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 public:
 	Identifier identifier;
 	Identifier owner;

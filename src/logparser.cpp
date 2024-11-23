@@ -32,7 +32,7 @@ bool LogParser::parse() const
 	while (std::getline(input_file, line))
 	{
 		++line_number;
-		if (line.empty()) continue;  // Skip empty lines
+		if (line.empty()) continue; // Skip empty lines
 
 		if (LogEntry entry; entry.parse(line))
 		{

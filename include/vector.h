@@ -7,6 +7,19 @@
 
 class Vector
 {
+	friend bool operator==(const Vector& lhs, const Vector& rhs)
+	{
+		return lhs.x_ == rhs.x_
+			&& lhs.y_ == rhs.y_
+			&& lhs.z_ == rhs.z_
+			&& lhs.ang_ == rhs.ang_;
+	}
+
+	friend bool operator!=(const Vector& lhs, const Vector& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	double x_;
 	double y_;
 	double z_;
@@ -14,6 +27,14 @@ class Vector
 
 public:
 	Vector() : x_(0.0), y_(0.0), z_(0.0), ang_(0.0)
+	{
+	}
+
+	Vector(const double x, const double y, const double z, const double ang)
+		: x_(x),
+		y_(y),
+		z_(z),
+		ang_(ang)
 	{
 	}
 

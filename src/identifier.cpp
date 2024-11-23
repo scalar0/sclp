@@ -1,8 +1,6 @@
 #include "identifier.h"
 #include <string>
-
 #include "parsing_utils.h"
-
 #include "nlohmann/json_fwd.hpp"
 
 bool Identifier::parse(const std::string& s)
@@ -36,7 +34,7 @@ bool Identifier::parse(const std::string& s)
 		if (brace_open_pos != std::string::npos && brace_close_pos != std::string::npos && brace_close_pos >
 			brace_open_pos)
 		{
-			setName(str.substr(0, brace_open_pos));
+			setName(str.substr(0, brace_open_pos - 1));
 			setId(str.substr(brace_open_pos + 1, brace_close_pos - brace_open_pos - 1));
 
 			// Check for instance after colon
@@ -49,7 +47,7 @@ bool Identifier::parse(const std::string& s)
 			colon_pos = str.find(':');
 			if (colon_pos != std::string::npos)
 			{
-				setName(str.substr(0, colon_pos));
+				setName(str.substr(0, colon_pos - 1));
 				setInstance(str.substr(colon_pos + 1));
 				setId("");
 			}

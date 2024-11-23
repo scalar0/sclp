@@ -1,8 +1,6 @@
 #include "quant.h"
 #include <regex>
-
 #include "nlohmann/json_fwd.hpp"
-using json = nlohmann::json;
 
 bool Quant::parse(const std::string& s)
 {
@@ -11,51 +9,51 @@ bool Quant::parse(const std::string& s)
 		return true;
 	}
 
-	if (std::smatch matches; std::regex_match(s, matches, pattern))
+	if (std::smatch m; std::regex_match(s, m, pattern))
 	{
 		// Parse value
-		if (matches[1].matched && !matches[1].str().empty())
+		if (m[1].matched && !m[1].str().empty())
 		{
-			value_ = std::stoi(matches[1].str());
+			value_ = std::stoi(m[1].str());
 		}
 
 		// Parse critical flag
-		is_crit_ = matches[2].matched && !matches[2].str().empty();
+		is_crit_ = m[2].matched && !m[2].str().empty();
 
 		// Parse effective value
-		if (matches[3].matched && !matches[3].str().empty())
+		if (m[3].matched && !m[3].str().empty())
 		{
-			effective_value_ = std::stoi(matches[3].str());
+			effective_value_ = std::stoi(m[3].str());
 		}
 
 		// Parse damage type
-		if (matches[4].matched && !matches[4].str().empty())
+		if (m[4].matched && !m[4].str().empty())
 		{
-			damage_type_ = matches[4].str();
-			damage_type_guid_ = matches[5].str();
+			damage_type_ = m[4].str();
+			damage_type_guid_ = m[5].str();
 		}
 
 		// Parse reflect type
-		if (matches[6].matched && !matches[6].str().empty())
+		if (m[6].matched && !m[6].str().empty())
 		{
-			reflect_type_ = matches[6].str();
-			reflect_type_guid_ = matches[7].str();
+			reflect_type_ = m[6].str();
+			reflect_type_guid_ = m[7].str();
 		}
 
 		// Parse mitigation details
-		if ((matches[8].matched && !matches[8].str().empty()) || (matches[9].matched && !matches[9].str().empty()))
+		if ((m[8].matched && !m[8].str().empty())) //|| (m[9].matched && !m[9].str().empty()))
 		{
 			is_mitigation_ = true;
-			mitigation_type_ = matches[8].str();
-			mitigation_type_guid_ = matches[9].str();
+			mitigation_type_ = m[8].str();
+			mitigation_type_guid_ = m[9].str();
 		}
 
 		// Parse absorption details
-		if (matches[10].matched && !matches[10].str().empty())
+		if (m[10].matched && !m[10].str().empty())
 		{
-			absorb_value_ = std::stoi(matches[10].str());
-			absorb_type_ = matches[11].str();
-			absorb_type_guid_ = matches[12].str();
+			absorb_value_ = std::stoi(m[10].str());
+			absorb_type_ = m[11].str();
+			absorb_type_guid_ = m[12].str();
 		}
 
 		return true;
@@ -66,9 +64,9 @@ bool Quant::parse(const std::string& s)
 	return true;
 }
 
-json Quant::to_json() const
+nlohmann::json Quant::to_json() const
 {
-	return json{
+	return nlohmann::json{
 		{"value", value_},
 		{"is_crit", is_crit_},
 		{"effective", effective_value_},

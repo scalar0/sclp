@@ -8,6 +8,17 @@
 
 class Effect
 {
+	friend bool operator==(const Effect& lhs, const Effect& rhs)
+	{
+		return lhs.name_ == rhs.name_
+			&& lhs.guid_ == rhs.guid_;
+	}
+
+	friend bool operator!=(const Effect& lhs, const Effect& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	std::string name_;
 	std::string guid_;
 	inline static const std::regex pattern{
@@ -15,6 +26,14 @@ class Effect
 	};
 
 public:
+	Effect() = default;
+
+	Effect(const std::string& name, const std::string& guid)
+		: name_(name),
+		guid_(guid)
+	{
+	}
+
 	// Getters and setters
 	[[nodiscard]] std::string getName() const { return name_; }
 	[[nodiscard]] std::string getId() const { return guid_; }

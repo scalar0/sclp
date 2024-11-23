@@ -9,6 +9,22 @@
 
 class LogEntry
 {
+	friend bool operator==(const LogEntry& lhs, const LogEntry& rhs)
+	{
+		return lhs.timestamp == rhs.timestamp
+			&& lhs.source == rhs.source
+			&& lhs.target == rhs.target
+			&& lhs.ability == rhs.ability
+			&& lhs.action == rhs.action
+			&& lhs.quants == rhs.quants
+			&& lhs.threat == rhs.threat;
+	}
+
+	friend bool operator!=(const LogEntry& lhs, const LogEntry& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	inline static const std::regex pattern{
 		R"(^\[(\d{2}:\d{2}:\d{2}\.\d{3})\] \[(.*?)\] \[(.*?)\] \[(.*?)\] \[(.*?)\](?: \((.*?)\))?(?: <(.*?)>)?$)"
 	};

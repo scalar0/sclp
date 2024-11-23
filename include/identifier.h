@@ -7,11 +7,30 @@
 
 class Identifier
 {
+	friend bool operator==(const Identifier& lhs, const Identifier& rhs)
+	{
+		return lhs.name_ == rhs.name_
+			&& lhs.guid_ == rhs.guid_
+			&& lhs.instance_ == rhs.instance_;
+	}
+
+	friend bool operator!=(const Identifier& lhs, const Identifier& rhs)
+	{
+		return !(lhs == rhs);
+	}
+
 	std::string name_;
 	std::string guid_;
 	std::string instance_;
 
 public:
+	Identifier() = default;
+
+	Identifier(const std::string& name, const std::string& guid, const std::string& inst)
+		: name_(name), guid_(guid), instance_(inst)
+	{
+	}
+
 	[[nodiscard]] const std::string& getName() const { return name_; }
 	[[nodiscard]] const std::string& getId() const { return guid_; }
 	[[nodiscard]] const std::string& getInstance() const { return instance_; }
