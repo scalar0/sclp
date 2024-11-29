@@ -7,46 +7,30 @@ if (POLICY CMP0141)
 endif()
 
 # Define the project and specify C++ as the language
-project("sclp" LANGUAGES CXX)
-set(SCLP_MAIN_ENTRY_POINT_NAME "sclp_main")
+project("SCLP" LANGUAGES CXX VERSION 0.0.0)
 set(SCLP_LIBRARY_NAME "sclp")
 
+include(mod.cmake)
 add_subdirectory(src)
 include_directories(include)
 
-add_executable(${SCLP_MAIN_ENTRY_POINT_NAME} "src/main.cpp")
-
-target_link_libraries(${SCLP_MAIN_ENTRY_POINT_NAME} PRIVATE ${SCLP_LIBRARY_NAME})
-
-# Specify output directories for the library
-set_target_properties(${SCLP_MAIN_ENTRY_POINT_NAME} PROPERTIES
-	CXX_STANDARD 23
-	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
-
 option(ENABLE_TESTING "Enable building tests" ON)
 option(ENABLE_CDASH "Enable CDash reporting" OFF)
-if (ENABLE_TESTING)
-	if (ENABLE_CDASH)
-		include(CTest)
-		set(CTEST_DROP_METHOD "http")
-		set(CTEST_DROP_SITE "localhost")
-		set(CTEST_DROP_LOCATION "/CDash/submit.php?project=YourProjectName")
-		set(CTEST_DROP_SITE_CDASH TRUE)
-	else()
-		enable_testing()
-	endif()
-	add_subdirectory(test)
-endif()
+option(ENABLE_DOXYGEN_BUILD "Enable Doxygen build" OFF)
+option(ENABLE_CLANG_TIDY "Enable Clang-Tidy" OFF)
+option(ENABLE_CPPCHECK "Enable CppCheck" OFF)
 
+# Setup testing and CDash
+setup_testing(ENABLE_TESTING ENABLE_CDASH)
 
-# Optional: Add install rules if you want to install the library and headers
-install(TARGETS ${SCLP_MAIN_ENTRY_POINT_NAME}
-	ARCHIVE DESTINATION lib
-	LIBRARY DESTINATION lib
-	RUNTIME DESTINATION bin
-)
+# Setup Doxygen
+setup_doxygen(ENABLE_DOXYGEN_BUILD)
 
-install(DIRECTORY include/ DESTINATION include)
+# Enable tools: Clang-Tidy and CppCheck
+enable_tool("clang-tidy" ENABLE_CLANG_TIDY "clang-tidy" 
+			"CMAKE_CXX_CLANG_TIDY \"\${CLANG_TIDY_EXE};-checks=*, -clang-analyzer-*\""
+			"clang-tidy not found, unable to run clang-tidy")
+
+enable_tool("cppcheck" ENABLE_CPPCHECK "cppcheck" 
+			"CMAKE_CXX_CPPCHECK \"\${CPPCHECK_EXE};--enable=all\""
+			"cppcheck not found, unable to run cppcheck")

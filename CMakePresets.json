@@ -1,195 +1,209 @@
 ﻿{
-    "version": 8,
-    "cmakeMinimumRequired": {
-        "major": 3,
-        "minor": 31,
-        "patch": 1
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 31,
+    "patch": 1
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "installDir": "${sourceDir}/install/${presetName}"
     },
-    "configurePresets": [
-        {
-            "name": "base",
-            "hidden": true,
-            "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
-            "installDir": "${sourceDir}/install/${presetName}"
-        },
-        {
-            "name": "windows-base",
-            "hidden": true,
-            "inherits": "base",
-            "cacheVariables": {
-                "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
-            },
-          "environment": {
-            "VSINSTALLDIR": "C:/Program Files/Microsoft Visual Studio/2022/Enterprise",
-            "VCPKG_ROOT": "$env{VSINSTALLDIR}/VC/vcpkg"
-          },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            }
-        },
-        {
-            "name": "x64-debug",
-            "displayName": "x64 Debug",
-            "inherits": "windows-base",
-            "architecture": {
-                "value": "x64",
-                "strategy": "external"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "x64-release",
-            "displayName": "x64 Release",
-            "inherits": "x64-debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "x86-debug",
-            "displayName": "x86 Debug",
-            "inherits": "windows-base",
-            "architecture": {
-                "value": "x86",
-                "strategy": "external"
-            },
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            }
-        },
-        {
-            "name": "x86-release",
-            "displayName": "x86 Release",
-            "inherits": "x86-debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release"
-            }
-        },
-        {
-            "name": "linux-debug",
-            "displayName": "Linux Debug",
-            "inherits": "base",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Linux"
-            }
-        },
-        {
-            "name": "macos-debug",
-            "displayName": "macOS Debug",
-            "inherits": "base",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Darwin"
-            }
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_MAKE_PROGRAM": "$env{VSINSTALLDIR}/common7/ide/commonextensions/microsoft/cmake/Ninja/ninja.exe"
+      },
+      "environment": {
+        "VSINSTALLDIR": "C:/Program Files/Microsoft Visual Studio/2022/Enterprise",
+        "VCINSTALLDIR": "$env{VSINSTALLDIR}/VC",
+        "VCPKG_ROOT": "$env{VCINSTALLDIR}/vcpkg"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "clangTidyChecks": "clang-analyzer-*, cppcoreguidelines-*, llvm-*, modernize-*, readability-*",
+          "enableMicrosoftCodeAnalysis": true,
+          "enableClangTidyCodeAnalysis": true
         }
-    ],
-    "buildPresets": [
+      }
+    },
+    {
+      "name": "x64-debug",
+      "displayName": "x64 Debug",
+      "inherits": "windows-base",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "x64-release",
+      "displayName": "x64 Release",
+      "inherits": "x64-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "x86-debug",
+      "displayName": "x86 Debug",
+      "inherits": "windows-base",
+      "architecture": {
+        "value": "x86",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "x86-release",
+      "displayName": "x86 Release",
+      "inherits": "x86-debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "linux-debug",
+      "displayName": "Linux Debug",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Linux"
+      }
+    },
+    {
+      "name": "macos-debug",
+      "displayName": "macOS Debug",
+      "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "build",
+      "hidden": true,
+      "jobs": 8
+    },
+    {
+      "name": "x64-debug",
+      "inherits": "build",
+      "configurePreset": "x64-debug"
+    },
+    {
+      "name": "x64-release",
+      "inherits": "build",
+      "configurePreset": "x64-release"
+    },
+    {
+      "name": "x86-debug",
+      "inherits": "build",
+      "configurePreset": "x86-debug"
+    },
+    {
+      "name": "x86-release",
+      "inherits": "build",
+      "configurePreset": "x86-release"
+    },
+    {
+      "name": "linux-debug",
+      "inherits": "build",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "macos-debug",
+      "inherits": "build",
+      "configurePreset": "macos-debug"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "test",
+      "hidden": true,
+      "execution": {
+        "jobs": 8
+      },
+      "output": {
+        "shortProgress": true
+      }
+    },
+    {
+      "name": "x64-debug",
+      "inherits": "test",
+      "configurePreset": "x64-debug"
+    },
+    {
+      "name": "x64-release",
+      "inherits": "test",
+      "configurePreset": "x64-release"
+    },
+    {
+      "name": "x86-debug",
+      "inherits": "test",
+      "configurePreset": "x86-debug"
+    },
+    {
+      "name": "x86-release",
+      "inherits": "test",
+      "configurePreset": "x86-release"
+    },
+    {
+      "name": "linux-debug",
+      "inherits": "test",
+      "configurePreset": "linux-debug"
+    },
+    {
+      "name": "macos-debug",
+      "inherits": "test",
+      "configurePreset": "macos-debug"
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "x64-debug",
+      "steps": [
         {
-            "name": "build",
-            "hidden": true,
-            "jobs": 8
+          "type": "configure",
+          "name": "x64-debug"
         },
         {
-            "name": "x64-debug",
-            "inherits": "build",
-            "configurePreset": "x64-debug"
+          "type": "build",
+          "name": "x64-debug"
         },
         {
-            "name": "x64-release",
-            "inherits": "build",
-            "configurePreset": "x64-release"
-        },
-        {
-            "name": "x86-debug",
-            "inherits": "build",
-            "configurePreset": "x86-debug"
-        },
-        {
-            "name": "x86-release",
-            "inherits": "build",
-            "configurePreset": "x86-release"
-        },
-        {
-            "name": "linux-debug",
-            "inherits": "build",
-            "configurePreset": "linux-debug"
-        },
-        {
-            "name": "macos-debug",
-            "inherits": "build",
-            "configurePreset": "macos-debug"
+          "type": "test",
+          "name": "x64-debug"
         }
-    ],
-    "testPresets": [
-        {
-            "name": "test",
-            "hidden": true,
-            "execution": {
-                "jobs": 8
-            }
-        },
-        {
-            "name": "x64-debug",
-            "inherits": "test",
-            "configurePreset": "x64-debug"
-        },
-        {
-            "name": "x64-release",
-            "inherits": "test",
-            "configurePreset": "x64-release"
-        },
-        {
-            "name": "x86-debug",
-            "inherits": "test",
-            "configurePreset": "x86-debug"
-        },
-        {
-            "name": "x86-release",
-            "inherits": "test",
-            "configurePreset": "x86-release"
-        },
-        {
-            "name": "linux-debug",
-            "inherits": "test",
-            "configurePreset": "linux-debug"
-        },
-        {
-            "name": "macos-debug",
-            "inherits": "test",
-            "configurePreset": "macos-debug"
-        }
-    ],
-    "workflowPresets": [
-        {
-            "name": "x64-debug",
-            "steps": [
-                {
-                    "type": "configure",
-                    "name": "x64-debug"
-                },
-                {
-                    "type": "build",
-                    "name": "x64-debug"
-                },
-                {
-                    "type": "test",
-                    "name": "x64-debug"
-                }
-            ]
-        }
-    ]
+      ]
+    }
+  ]
 }
