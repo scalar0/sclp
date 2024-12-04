@@ -2,8 +2,8 @@
   "version": 8,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 31,
-    "patch": 1
+    "minor": 29,
+    "patch": 0
   },
   "configurePresets": [
     {
@@ -43,7 +43,6 @@
     },
     {
       "name": "x64-debug",
-      "displayName": "x64 Debug",
       "inherits": "windows-base",
       "architecture": {
         "value": "x64",
@@ -55,7 +54,6 @@
     },
     {
       "name": "x64-release",
-      "displayName": "x64 Release",
       "inherits": "x64-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
@@ -63,7 +61,6 @@
     },
     {
       "name": "x86-debug",
-      "displayName": "x86 Debug",
       "inherits": "windows-base",
       "architecture": {
         "value": "x86",
@@ -75,7 +72,6 @@
     },
     {
       "name": "x86-release",
-      "displayName": "x86 Release",
       "inherits": "x86-debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
@@ -83,7 +79,6 @@
     },
     {
       "name": "linux-debug",
-      "displayName": "Linux Debug",
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -96,7 +91,6 @@
     },
     {
       "name": "macos-debug",
-      "displayName": "macOS Debug",
       "inherits": "base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug"
@@ -111,8 +105,7 @@
   "buildPresets": [
     {
       "name": "build",
-      "hidden": true,
-      "jobs": 8
+      "hidden": true
     },
     {
       "name": "x64-debug",
@@ -149,11 +142,10 @@
     {
       "name": "test",
       "hidden": true,
-      "execution": {
-        "jobs": 8
-      },
       "output": {
-        "shortProgress": true
+        "shortProgress": true,
+		"labelSummary" : true,
+		"outputJUnitFile": "${sourceDir}/build/${presetName}/Testing/Temporary/LastTestJ1.xml"
       }
     },
     {

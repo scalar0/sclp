@@ -1,0 +1,11 @@
+# Macro to add a tool
+macro(enable_tool TOOL_NAME TOOL_OPTION TOOL_FIND_COMMAND TOOL_SET_COMMAND WARNING_MESSAGE)
+	if(${TOOL_OPTION})
+		find_program(${TOOL_NAME}_EXE NAMES "${TOOL_FIND_COMMAND}")
+		if(${TOOL_NAME}_EXE)
+			set(${TOOL_SET_COMMAND})
+		else()
+			message(WARNING "${WARNING_MESSAGE}")
+		endif()
+	endif()
+endmacro()

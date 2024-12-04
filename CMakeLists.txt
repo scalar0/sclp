@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.31.1)
+﻿cmake_minimum_required(VERSION 3.29..3.31)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -7,30 +7,39 @@ if (POLICY CMP0141)
 endif()
 
 # Define the project and specify C++ as the language
-project("SCLP" LANGUAGES CXX VERSION 0.0.0)
+project("SCLP" VERSION 0.0.0 LANGUAGES CXX)
 set(SCLP_LIBRARY_NAME "sclp")
 
-include(mod.cmake)
-add_subdirectory(src)
-include_directories(include)
-
-option(ENABLE_TESTING "Enable building tests" ON)
-option(ENABLE_CDASH "Enable CDash reporting" OFF)
+option(ENABLE_TESTING "Enable building and running tests" ON)
+if(ENABLE_TESTING)
+	option(ENABLE_CDASH "Enable CDash reporting (requires ENABLE_TESTING)" ON)
+endif()
 option(ENABLE_DOXYGEN_BUILD "Enable Doxygen build" OFF)
 option(ENABLE_CLANG_TIDY "Enable Clang-Tidy" OFF)
 option(ENABLE_CPPCHECK "Enable CppCheck" OFF)
 
-# Setup testing and CDash
-setup_testing(ENABLE_TESTING ENABLE_CDASH)
+#set(BUILD_SHARED_LIBS STATIC)
+set(CMAKE_BUILD_PARALLEL_LEVEL 16)
+include(CMakeScripts.cmake)
+add_subdirectory(src)
+
+if(ENABLE_TESTING)
+	if(ENABLE_CDASH)
+		include(CTest)
+	endif()
+	enable_testing()
+	add_subdirectory(test)
+endif()
+
 
 # Setup Doxygen
-setup_doxygen(ENABLE_DOXYGEN_BUILD)
+include(CMakeDoxygen.cmake)
 
 # Enable tools: Clang-Tidy and CppCheck
-enable_tool("clang-tidy" ENABLE_CLANG_TIDY "clang-tidy" 
+enable_tool("clang-tidy" ENABLE_CLANG_TIDY "clang-tidy"
 			"CMAKE_CXX_CLANG_TIDY \"\${CLANG_TIDY_EXE};-checks=*, -clang-analyzer-*\""
 			"clang-tidy not found, unable to run clang-tidy")
 
-enable_tool("cppcheck" ENABLE_CPPCHECK "cppcheck" 
+enable_tool("cppcheck" ENABLE_CPPCHECK "cppcheck"
 			"CMAKE_CXX_CPPCHECK \"\${CPPCHECK_EXE};--enable=all\""
 			"cppcheck not found, unable to run cppcheck")
